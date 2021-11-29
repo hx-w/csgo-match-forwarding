@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  match-gocq:
+    image: silicer/go-cqhttp
+    restart: always
+    container_name: match-gocq
+    depends_on: 
+      - match-nonebot
+    volumes:
+      - ./configs/filter.json:/data/filter.json
+      - ./configs/go-cqhttp.yml:/data/config.yml
+      - ./data/go-cqhttp/logs:/data/logs
+      - ./data/go-cqhttp/data:/data/data
+  
+  match-nonebot:
+    build: ./nonebot
+    restart: always
+    container_name: match-nonebot
+    expose:  
+      - 9098
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./configs:/var/lib/match-nonebot
+      - ./nonebot:/root/nonebot/
+    command: python3 /root/nonebot/bot.py
