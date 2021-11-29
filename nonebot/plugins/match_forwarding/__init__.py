@@ -23,7 +23,6 @@ async def handler_subscribe(session: nonebot.CommandSession):
 
 @nonebot.on_command("取消订阅", permission=GROUP_ADMIN | SUPERUSER)
 async def handler_unsubscribe(session: nonebot.CommandSession):
-    print('?????????????')
     await subscribe.command_unsubscribe(session)
 
 

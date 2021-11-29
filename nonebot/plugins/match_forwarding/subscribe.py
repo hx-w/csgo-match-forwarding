@@ -5,7 +5,9 @@ from . import utils
 
 
 async def command_subscribe(session: nonebot.CommandSession):
-    team = session.get("team_sub", prompt="输入想要订阅的战队名称")
+    team = (await session.aget(prompt="输入想要订阅的战队名称")).strip()
+    while not team:
+        team = (await session.aget(prompt="输入的战队名不能为空，请重新输入")).strip()
     retcode = await utils.set_team(team)
     if retcode == 1:
         await session.send(f'已订阅【{team}】的比赛')
@@ -22,7 +24,9 @@ async def command_teamlist(session: nonebot.CommandSession):
 
 
 async def command_unsubscribe(session: nonebot.CommandSession):
-    team = session.get("team_unsub", prompt="输入想要取消订阅的战队名称")
+    team = (await session.aget(prompt="输入想要取消订阅的战队名称")).strip()
+    while not team:
+        team = (await session.aget(prompt="输入的战队名不能为空，请重新输入")).strip()
     retcode = await utils.del_team(team)
     if retcode == 1:
         await session.send(f'已取消订阅【{team}】的比赛')

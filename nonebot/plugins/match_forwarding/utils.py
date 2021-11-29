@@ -3,9 +3,9 @@
 import json
 import copy
 
-TEAMLIST_PATH = '/var/lib/match-nonebot/__subscribed.json'
+__teamlist_path = '/var/lib/match-nonebot/__subscribed.json'
 
-DEFAULT_LIST = [
+__default_teamlist = [
     "astralis",
     "natus vincere",
     "g2",
@@ -23,41 +23,41 @@ DEFAULT_LIST = [
     "tyloo"
 ]
 
-HOT_LIST = []
+__hotlist = []
 
 
 async def create_if_not_exist():
-    global HOT_LIST
+    global __hotlist
     try:
-        with open(TEAMLIST_PATH, 'r', encoding='utf-8') as iFile:
-            HOT_LIST = json.load(iFile)
+        with open(__teamlist_path, 'r', encoding='utf-8') as iFile:
+            __hotlist = json.load(iFile)
             return True
     except:
-        with open(TEAMLIST_PATH, 'w', encoding='utf-8') as oFile:
-            json.dump(DEFAULT_LIST, oFile)
-            HOT_LIST = copy.deepcopy(DEFAULT_LIST)
+        with open(__teamlist_path, 'w', encoding='utf-8') as oFile:
+            json.dump(__default_teamlist, oFile)
+            __hotlist = copy.deepcopy(__default_teamlist)
         return False
 
 
 async def get_all_list() -> list:
-    global HOT_LIST
-    with open(TEAMLIST_PATH, 'r') as iFile:
-        HOT_LIST = json.load(iFile)
-    return HOT_LIST
+    global __hotlist, __teamlist_path
+    with open(__teamlist_path, 'r') as iFile:
+        __hotlist = json.load(iFile)
+    return __hotlist
 
 
 # return 0 error
 #        1 success
 #        2 duplicate
 async def set_team(teamname: str) -> bool:
-    global HOT_LIST
+    global __hotlist, __teamlist_path
     teamname = teamname.lower()
-    if teamname in HOT_LIST:
+    if teamname in __hotlist:
         return 2
-    HOT_LIST.append(teamname)
+    __hotlist.append(teamname)
     try:
-        with open(TEAMLIST_PATH, 'w') as oFile:
-            json.dump(HOT_LIST, oFile)
+        with open(__teamlist_path, 'w') as oFile:
+            json.dump(__hotlist, oFile)
         return 1
     except Exception as ept:
         print(f'[ERROR] {ept}')
@@ -65,15 +65,15 @@ async def set_team(teamname: str) -> bool:
 
 
 async def del_team(teamname: str) -> bool:
-    global HOT_LIST
+    global __hotlist
     teamname = teamname.lower()
-    if teamname in HOT_LIST:
-        HOT_LIST.remove(teamname)
-        with open(TEAMLIST_PATH, 'w') as oFile:
-            json.dump(HOT_LIST, oFile)
+    if teamname in __hotlist:
+        __hotlist.remove(teamname)
+        with open(__teamlist_path, 'w') as oFile:
+            json.dump(__hotlist, oFile)
         return 1
     return 0
 
 
 async def check_team(teamname: str) -> bool:
-    return teamname.lower() in HOT_LIST
+    return teamname.lower() in __hotlist
