@@ -27,7 +27,7 @@ __hotlist = []
 
 
 async def create_if_not_exist():
-    global __hotlist
+    global __hotlist, __teamlist_path
     try:
         with open(__teamlist_path, 'r', encoding='utf-8') as iFile:
             __hotlist = json.load(iFile)

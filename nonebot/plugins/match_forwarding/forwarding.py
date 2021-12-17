@@ -2,6 +2,7 @@
 
 import nonebot
 
+bot = nonebot.get_bot()
 
-async def handler_forwarding(bot: nonebot.NoneBot):
-    print('forwarding')
+async def handler_forwarding():
+    pass

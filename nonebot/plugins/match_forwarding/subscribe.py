@@ -12,14 +12,14 @@ async def command_subscribe(session: nonebot.CommandSession):
     if retcode == 1:
         await session.send(f'已订阅【{team}】的比赛')
     elif retcode == 2:
-        await session.send(f'【{team}】已在订阅列表中，输入<订阅列表>查看全部订阅')
+        await session.send(f'【{team}】已在订阅列表中，输入【订阅列表】查看全部订阅')
     else:
         await session.send(f'出现错误：{retcode}，请联系管理员修复')
 
 
 async def command_teamlist(session: nonebot.CommandSession):
     teamlist = await utils.get_all_list()
-    ret = "全部战队订阅(小写)：" + "\n".join(teamlist)
+    ret = "全部战队订阅(小写)：\n" + "\n".join(teamlist)
     await session.send(ret)
 
 

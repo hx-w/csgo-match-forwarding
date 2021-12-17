@@ -9,8 +9,10 @@ HLTV_API_ENDPOINT = 'https://selfhost-hltv-api.vercel.app/'
 # 管理员的QQ 订阅战队需要有管理员权限
 SUPERUSERS = {765892480}  # 多个管理员用英文逗号隔开
 
-## === 不用更改 === ##
+## ==== 不用更改 ==== ##
 DEBUG = False
 HOST = 'match-nonebot'
 PORT = 9098
-## =============== ##
+COMMAND_START = {''}
+NICKNAME = {''}
+## ================= ##
