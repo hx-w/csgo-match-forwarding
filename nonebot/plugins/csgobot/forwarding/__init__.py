@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import nonebot
 
 from . import utils
@@ -17,7 +18,7 @@ async def command_subscribe(session: nonebot.CommandSession):
         await session.send(f'出现错误：{retcode}，请联系管理员修复')
 
 
-async def command_teamlist(session: nonebot.CommandSession):
+async def command_subscribed(session: nonebot.CommandSession):
     teamlist = await utils.get_all_list()
     ret = "全部战队订阅(小写)：\n" + "\n".join(teamlist)
     await session.send(ret)
@@ -32,3 +33,16 @@ async def command_unsubscribe(session: nonebot.CommandSession):
         await session.send(f'已取消订阅【{team}】的比赛')
     else:
         await session.send(f'未订阅【{team}】的比赛，取消订阅失败')
+
+
+async def handler_forwarding():
+    pass
+
+
+__all__ = [
+    command_subscribe,
+    command_unsubscribe,
+    command_subscribed,
+    handler_forwarding,
+    utils
+]
