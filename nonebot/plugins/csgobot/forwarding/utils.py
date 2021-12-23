@@ -2,7 +2,12 @@
 
 import json
 import copy
+import datetime
+import requests
 
+import nonebot
+
+bot = nonebot.get_bot()
 __teamlist_path = '/var/lib/match-nonebot/__subscribed.json'
 
 __default_teamlist = [
@@ -77,3 +82,26 @@ async def del_team(teamname: str) -> bool:
 
 async def check_team(teamname: str) -> bool:
     return teamname.lower() in __hotlist
+
+
+async def convert_localtime(utcTime: str) -> datetime.datetime:
+    utc_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+    ctime = datetime.datetime.strptime(utcTime, utc_format)
+    localtime = ctime + datetime.timedelta(hours=8)  # beijing
+    return localtime
+
+
+async def goreq(url: str) -> list:
+    resp = requests.get(url)
+    try:
+        assert resp.status_code == 200
+        return json.loads(resp.content.decode('utf-8'))
+    except Exception as ept:
+        for spid in bot.config.SUPERUSERS:
+            await bot.send_private_msg(spid, message=f'请求错误\n[API] {url}\n[ERR] {ept}')
+    return []
+
+
+async def broadcast(message: nonebot.Message):
+    for qgid in bot.config.BROADCAST_GROUP_LIST:
+        await bot.send_group_msg(qgid, message=message)

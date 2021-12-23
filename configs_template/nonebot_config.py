@@ -9,7 +9,10 @@ from nonebot.default_config import *
 HLTV_API_ENDPOINT = 'https://hltv-api.netlify.app/.netlify/functions'
 
 # 启用bot的qq群号，多个群号用英文逗号分隔
-BCAST_GROUP_LIST = []
+BROADCAST_GROUP_LIST = []
+
+# 比赛战报更新检查周期 单位秒
+MATCH_RESULT_CHECK_PERIOD = 60
 
 ### ------------------- END -------------------
 
@@ -22,4 +25,7 @@ HOST = 'match-nonebot'
 PORT = 9098
 COMMAND_START = {''}
 NICKNAME = {''}
+
+async def API(api: str) -> str:
+    return f'{HLTV_API_ENDPOINT}{api}'
 ## ================= ##

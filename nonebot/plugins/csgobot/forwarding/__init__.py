@@ -3,6 +3,7 @@
 import nonebot
 
 from . import utils
+from . import forward
 
 
 async def command_subscribe(session: nonebot.CommandSession):
@@ -36,7 +37,7 @@ async def command_unsubscribe(session: nonebot.CommandSession):
 
 
 async def handler_forwarding():
-    pass
+    await forward.handler_new_result()
 
 
 __all__ = [

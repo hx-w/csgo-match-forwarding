@@ -7,6 +7,7 @@ from nonebot import on_command, on_websocket_connect, CommandSession
 
 from . import forwarding
 
+bot = nonebot.get_bot()
 
 @on_websocket_connect
 async def connect(event: aiocqhttp.Event):
@@ -33,6 +34,6 @@ async def handlder_matchlist(session: CommandSession):
     pass
 
 
-@nonebot.scheduler.scheduled_job('cron', minute='*')
+@nonebot.scheduler.scheduled_job('interval', seconds=bot.config.MATCH_RESULT_CHECK_PERIOD)
 async def handler_spider():
     await forwarding.handler_forwarding()

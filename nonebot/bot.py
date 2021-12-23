@@ -7,9 +7,7 @@ sys.path.append('/var/lib/match-nonebot')
 try:
     import nonebot_config as config
 except:
-    import nonebot.default_config as config
-    config.DEBUG = False
-
+    raise Exception('配置文件路径错误')
 
 if __name__ == '__main__':
     nonebot.init(config)
