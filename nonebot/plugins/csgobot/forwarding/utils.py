@@ -26,7 +26,7 @@ __default_teamlist = [
 __hotlist = []
 
 
-async def create_if_not_exist():
+async def create_teamlist_if_not_exist():
     global __hotlist, __teamlist_path
     try:
         with open(__teamlist_path, 'r', encoding='utf-8') as iFile:
