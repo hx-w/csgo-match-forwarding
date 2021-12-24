@@ -35,5 +35,5 @@ async def handlder_matchlist(session: CommandSession):
 
 
 @nonebot.scheduler.scheduled_job('interval', seconds=bot.config.MATCH_RESULT_CHECK_PERIOD)
-async def handler_spider():
+async def handler_forwarding():
     await forwarding.handler_forwarding()
