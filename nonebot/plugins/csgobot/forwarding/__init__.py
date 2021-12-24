@@ -37,7 +37,7 @@ async def command_unsubscribe(session: nonebot.CommandSession):
 
 
 async def handler_forwarding():
-    await forward.handler_new_result()
+    await forward.handler_forward_all()
 
 
 __all__ = [

@@ -3,7 +3,7 @@
 import json
 import copy
 import datetime
-import requests
+import aiohttp
 
 import nonebot
 
@@ -91,15 +91,24 @@ async def convert_localtime(utcTime: str) -> datetime.datetime:
     return localtime
 
 
-async def goreq(url: str) -> list:
-    resp = requests.get(url)
-    try:
-        assert resp.status_code == 200
-        return json.loads(resp.content.decode('utf-8'))
-    except Exception as ept:
-        for spid in bot.config.SUPERUSERS:
-            await bot.send_private_msg(spid, message=f'请求错误\n[API] {url}\n[ERR] {ept}')
-    return []
+# async def __fetch(client: aiohttp.ClientSession, url: str) -> str:
+#     async with client.get(url) as resp:
+#         assert resp.status == 200
+#         return await resp.text()
+
+# async def goreq(url: str) -> list:
+#     try:
+#         async with aiohttp.ClientSession() as client:
+#             return json.loads(await __fetch(client, url))
+#         # resp = requests.get(url)
+#         # assert resp.status_code == 200
+#         # return json.loads(resp.content.decode('utf-8'))
+
+#     except Exception as ept:
+#         print(f'GET: {url}')
+#         for spid in bot.config.SUPERUSERS:
+#             await bot.send_private_msg(spid, message=f'请求错误\n[API] {url}\n[ERR] {ept}')
+#     return []
 
 
 async def broadcast(message: nonebot.Message):
