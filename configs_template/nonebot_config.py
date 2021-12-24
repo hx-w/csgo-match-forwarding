@@ -6,7 +6,8 @@ from nonebot.default_config import *
 ### --------------- 插件核心配置 -------------------
 
 # hltv的数据api地址，默认提供的api服务器在国外，之后会出自定义部署hltv api的方法
-HLTV_API_ENDPOINT = 'https://hltv-api.netlify.app/.netlify/functions'
+# HLTV_API_ENDPOINT = 'https://hltv-api.netlify.app/.netlify/functions'
+HLTV_API_ENDPOINT = 'https://service-ban7exd9-1256946954.cd.apigw.tencentcs.com/release'
 
 # 启用bot的qq群号，多个群号用英文逗号分隔
 BROADCAST_GROUP_LIST = []
