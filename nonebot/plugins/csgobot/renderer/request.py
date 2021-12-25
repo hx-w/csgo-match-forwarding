@@ -15,14 +15,15 @@ class AsyncRequest:
                 return []
 
 
-    async def __fetch_task(self):
+    async def __fetch_task(self, urls):
         async with aiohttp.ClientSession() as client:
             tasks = [asyncio.create_task(
-                self.__fetch(client, url)) for url in self.urls]
+                self.__fetch(client, url)) for url in urls]
             return await asyncio.wait(tasks)
 
 
-    async def request(self) -> list:
-        # exception check TODO
-        done, _ = await self.__fetch_task()
+    async def request(self, urls = []) -> list:
+        if urls == []:
+            urls = self.urls
+        done, _ = await self.__fetch_task(urls)
         return [fut.result() for fut in done]

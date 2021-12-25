@@ -23,8 +23,12 @@ async def __check_new(reslist: list):
     return newList
 
 
+async def __check_result_valid(result: dict):
+    return True in [utils.check_team(team['name']) for team in result['teams']]
+
+
 async def __handler_results(results_all: list):
-    list_new = await __check_new(results_all)
+    list_new = list(filter(lambda result: __check_result_valid(result) ,await __check_new(results_all)))
     if len(list_new) > 0:
         # RENDER DO
         matchIdList = list(x['matchId'] for x in list_new)
