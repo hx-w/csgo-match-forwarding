@@ -3,8 +3,6 @@
 import json
 import copy
 import datetime
-import aiohttp
-
 import nonebot
 
 bot = nonebot.get_bot()
@@ -93,4 +91,4 @@ async def convert_localtime(utcTime: str) -> datetime.datetime:
 
 async def broadcast(message: nonebot.Message):
     for qgid in bot.config.BROADCAST_GROUP_LIST:
-        await bot.send_group_msg(qgid, message=message)
+        await bot.send_group_msg(group_id=qgid, message=message)

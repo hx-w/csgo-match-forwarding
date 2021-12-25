@@ -18,7 +18,7 @@ async def __check_new(reslist: list):
     for result in reslist:
         resTime = await utils.convert_localtime(result['time'])
         if (resTime - nowTime).seconds >= bot.config.MATCH_RESULT_CHECK_PERIOD:
-            break
+            continue
         newList.append(result)
     return newList
 
@@ -40,5 +40,5 @@ async def __handler_news(news_all: list):
 
 async def handler_forward_all():
     resptuple = await req_inst.request()
-    await __handler_results(resptuple[0])
-    await __handler_news(resptuple[1])
+    await __handler_results(resptuple[1])
+    await __handler_news(resptuple[0])

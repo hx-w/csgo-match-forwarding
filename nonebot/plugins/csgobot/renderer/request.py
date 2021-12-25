@@ -6,10 +6,13 @@ class AsyncRequest:
     def __init__(self, urls=[]):
         self.urls = urls
 
-    async def __fetch(self, client: aiohttp.ClientSession, url: str):
+    async def __fetch(self, client: aiohttp.ClientSession, url: str) -> list:
         async with client.get(url) as resp:
-            assert resp.status == 200
-            return await resp.json()
+            if resp.status == 200:
+                return await resp.json()
+            else:
+                print(f'[ERR] {resp.status} in {url}')
+                return []
 
 
     async def __fetch_task(self):
