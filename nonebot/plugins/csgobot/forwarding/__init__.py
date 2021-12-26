@@ -47,10 +47,9 @@ async def handler_forwarding():
 
 
 __all__ = [
+    on_start_up,
     command_subscribe,
     command_unsubscribe,
     command_subscribed,
     handler_forwarding,
-    utils,
-    on_start_up,
 ]
