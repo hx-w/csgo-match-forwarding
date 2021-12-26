@@ -22,6 +22,6 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - ./configs:/var/lib/match-nonebot
+      - ./configs:/var/lib/match-nonebot/
       - ./nonebot:/root/nonebot/
     command: python3 /root/nonebot/bot.py

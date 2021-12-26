@@ -2,11 +2,11 @@
 
 import json
 import copy
-import datetime
 import nonebot
 
 bot = nonebot.get_bot()
 __teamlist_path = '/var/lib/match-nonebot/__subscribed.json'
+
 
 __default_teamlist = [
     "astralis",

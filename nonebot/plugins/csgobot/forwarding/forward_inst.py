@@ -2,7 +2,7 @@
 
 from typing import List
 import nonebot
-from .base import ForwardBase
+from .forward_base import ForwardBase
 from .utils import check_team
 
 bot = nonebot.get_bot()

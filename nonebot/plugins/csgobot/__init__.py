@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import aiocqhttp
 import nonebot
 from nonebot.permission import GROUP_ADMIN, SUPERUSER
-from nonebot import on_command, on_websocket_connect, CommandSession
+from nonebot import on_command, on_startup, CommandSession
 
 from . import forwarding
 
 bot = nonebot.get_bot()
 
-@on_websocket_connect
-async def connect(event: aiocqhttp.Event):
-    await forwarding.utils.create_teamlist_if_not_exist()
+@on_startup
+async def init_all():
+    await forwarding.on_start_up()
 
 
 @on_command('subscribe', aliases=('战队订阅', '订阅'), permission=GROUP_ADMIN | SUPERUSER)

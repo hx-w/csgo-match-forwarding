@@ -31,7 +31,7 @@ class ForwardBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def customer_filter(self, inst: dict) -> bool:
         '''
-        determine wether saving this instance or not
+        determine wether saving this instance or not after time_filter
         '''
         return True
 
