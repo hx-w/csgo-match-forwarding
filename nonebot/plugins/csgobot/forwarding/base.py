@@ -9,11 +9,26 @@ from ..async_req import req_inst
 
 bot = nonebot.get_bot()
 
+
+class AsyncObject(object):
+    """Inheriting this class allows you to define an async __init__.
+
+    So you can create objects by doing something like `await MyClass(params)`
+    """
+    async def __new__(cls, *a, **kw):
+        instance = super().__new__(cls)
+        await instance.__init__(*a, **kw)
+        return instance
+
+    async def __init__(self):
+        pass
+
+
 class ForwardBase(metaclass=abc.ABCMeta):
-    def __init__(self, period_gap: int):
+    def __init__(self):
         self._utc_format = '%Y-%m-%dT%H:%M:%S.%fZ'
         self._time_region = +8
-        self._period = period_gap  # seconds for sheduler check
+        self._period = bot.config.MATCH_RESULT_CHECK_PERIOD  # seconds for sheduler check
         self.__sync_clock()
 
     def __sync_clock(self):
