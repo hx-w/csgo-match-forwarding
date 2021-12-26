@@ -78,17 +78,5 @@ async def del_team(teamname: str) -> bool:
     return 0
 
 
-async def check_team(teamname: str) -> bool:
+def check_team(teamname: str) -> bool:
     return teamname.lower() in __hotlist
-
-
-async def convert_localtime(utcTime: str) -> datetime.datetime:
-    utc_format = '%Y-%m-%dT%H:%M:%S.%fZ'
-    ctime = datetime.datetime.strptime(utcTime, utc_format)
-    localtime = ctime + datetime.timedelta(hours=8)  # beijing
-    return localtime
-
-
-async def broadcast(message: nonebot.Message):
-    for qgid in bot.config.BROADCAST_GROUP_LIST:
-        await bot.send_group_msg(group_id=qgid, message=message)

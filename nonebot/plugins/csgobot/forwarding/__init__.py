@@ -3,7 +3,7 @@
 import nonebot
 
 from . import utils
-from . import forward
+from . import forward_inst
 
 
 async def command_subscribe(session: nonebot.CommandSession):
@@ -20,6 +20,8 @@ async def command_subscribe(session: nonebot.CommandSession):
 
 
 async def command_subscribed(session: nonebot.CommandSession):
+    for inst in forward_inst.forward_insts:
+        await inst.broadcast()
     teamlist = await utils.get_all_list()
     ret = "全部战队订阅(小写)：\n" + "\n".join(teamlist)
     await session.send(ret)
@@ -37,7 +39,8 @@ async def command_unsubscribe(session: nonebot.CommandSession):
 
 
 async def handler_forwarding():
-    await forward.handler_forward_all()
+    for inst in forward_inst.forward_insts:
+        await inst.broadcast()
 
 
 __all__ = [
