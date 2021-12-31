@@ -2,7 +2,8 @@
 
 import gc
 import abc
-from typing import List
+from typing import List, Tuple, Callable
+import functools
 import base64
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
@@ -36,14 +37,37 @@ class RenderBase(metaclass=abc.ABCMeta):
     async def __free(self):
         del self._image, self._drawtable
         gc.collect()
+    
+    async def get_image_from_binary(self, bytes_: bytes) -> Image:
+        try:
+            im = Image.open(BytesIO(bytes_)).convert('RGBA')
+            imp = Image.new('RGBA', im.size, (255, 255, 255))
+            imp.paste(im, (0, 0, *im.size), im)
+            return imp
+        except:
+            return None
+    
+    async def paste_image(self, image_: Image, box: Tuple[int]):
+        self._image.paste(image_, box=box)
+    
+    def draw_valid_required(func: Callable):
+        @functools.wraps(func)
+        def wrapper(self, *args, **kw):
+            if not self._drawtable:
+                return
+            return func(self, *args, **kw)
+        return wrapper
 
+    @draw_valid_required
     def draw_text(self, xy: tuple, text: str, fontsize: int = 0, fill: str = '#000000'):
-        if not self._drawtable:
-            return
-        _font = self.__get_fonttype(
-            fontsize) if fontsize and fontsize != self._fontsize else self._fonttype
+        _font = self.__get_fonttype(fontsize) if fontsize and fontsize != self._fontsize else self._fonttype
         self._drawtable.text(
             xy=xy, text=text, fill=fill, font=_font)
+
+    @draw_valid_required
+    def draw_divider(self, y: int, percent: float = 0.8, fill: str = 'gray'):
+        _padding = self._w * ((1 - percent) / 2)
+        self._drawtable.line([(_padding, y), (self._w - _padding, y)], fill=fill)
 
     def __calc_texts_center_index(self, texts: List[str], fontsizes: List[int], pivot: int) -> List[int]:
         def _(c: str) -> float:
