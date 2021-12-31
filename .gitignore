@@ -8,6 +8,9 @@ api/
 # C extensions
 *.so
 
+test.png
+*.ttf
+
 # Distribution / packaging
 .Python
 build/

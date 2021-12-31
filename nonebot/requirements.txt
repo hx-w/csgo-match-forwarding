@@ -1,3 +1,4 @@
 nonebot[scheduler]
 requests
 aiohttp
+Pillow
