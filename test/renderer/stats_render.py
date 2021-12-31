@@ -17,6 +17,10 @@ class StatsRender(RenderBase):
             await self.paste_image(logo_images[0], (10, 10))
         if logo_images[1]:
             await self.paste_image(logo_images[1], (self._w - 60, 10))
+    
+    async def __render_map_info(self, map_info: dict, idx: int = 0):
+        _line = ['{:<15}'.format(map_info['name']), '{:^10}'.format('上半场'), '{:>10}'.format('下半场')]
+        self.draw_text_center(idx * 60 + 115, _line)
 
     async def generate_image(self, content: dict):
         res, stats = content['result'], content['stats']
@@ -32,3 +36,7 @@ class StatsRender(RenderBase):
         self.draw_text_center(75, _line, fills=_fills, fontsizes=[20, 16, 20], pivot=1)
         # L04 divider
         self.draw_divider(108)
+        # L05 
+        stats['maps'] = list(filter(lambda x: x['name'] != 'Default', stats['maps']))
+        for idx, map_info in enumerate(stats['maps']):
+            await self.__render_map_info(map_info, idx)
