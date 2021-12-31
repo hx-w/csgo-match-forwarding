@@ -10,6 +10,8 @@ api/
 
 test.png
 *.ttf
+result.json
+stats.json
 
 # Distribution / packaging
 .Python
