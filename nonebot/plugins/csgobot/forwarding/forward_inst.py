@@ -15,7 +15,7 @@ class MatchForward(ForwardBase, AsyncObject):
         self.subscribe_inst = await SubscribeSystem()
 
     def customer_filter(self, inst: dict) -> bool:
-        return True in [self.subscribe_inst.check_team_status(team) for team in inst['teams']]
+        return True in [self.subscribe_inst.check_team_status(team['name']) for team in inst['teams']]
 
     async def generate_message(self) -> List[nonebot.Message]:
         _validlist = await self.request_data(bot.config.API('/results'))

@@ -11,10 +11,8 @@ bot = nonebot.get_bot()
 
 
 class AsyncObject(object):
-    """Inheriting this class allows you to define an async __init__.
-
-    So you can create objects by doing something like `await MyClass(params)`
-    """
+    '''Inheriting this class allows you to define an async __init__.
+    '''
     async def __new__(cls, *a, **kw):
         instance = super().__new__(cls)
         await instance.__init__(*a, **kw)
@@ -45,8 +43,7 @@ class ForwardBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def customer_filter(self, inst: dict) -> bool:
-        '''
-        determine wether saving this instance or not after time_filter
+        '''determine wether saving this instance or not after time_filter
         '''
         return True
 
@@ -60,8 +57,7 @@ class ForwardBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     async def generate_message(self) -> List[nonebot.Message]:
-        '''
-        request api and generate message list for broadcast
+        '''request api and generate message list for broadcast
         '''
         return []
 

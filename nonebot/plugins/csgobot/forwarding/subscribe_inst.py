@@ -6,12 +6,10 @@ from .base import AsyncObject
 class SubscribeSystem(AsyncObject):
     async def __init__(self):
         self._subscribed_path = '/var/lib/match-nonebot/__subscribed.json'
-        # self._cached_teamlist = []
         await self.init_if_not_exist()
 
     async def __init_cached_teamlist(self):
-        '''
-        top10 teams default
+        '''top10 teams default
         '''
         self._cached_teamlist = []
 
@@ -32,7 +30,7 @@ class SubscribeSystem(AsyncObject):
         return self._cached_teamlist
 
     async def subscribe(self, teamname: str) -> bool:
-        '''
+        ''' set team in cache & file
         @return True => new added
                 False => duplicated
         '''
@@ -44,7 +42,7 @@ class SubscribeSystem(AsyncObject):
         return True
 
     async def unsubscribe(self, teamname: str) -> bool:
-        '''
+        ''' del team in cache & file
         @return True => operating succeed
                 False => not found
         '''
@@ -56,7 +54,7 @@ class SubscribeSystem(AsyncObject):
         return False
 
     def check_team_status(self, teamname: str) -> bool:
-        '''
+        ''' check if team is subscribed
         @return True => team is subscribed
                 False => team is not subscribed
         '''
