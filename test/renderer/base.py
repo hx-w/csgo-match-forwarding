@@ -59,14 +59,18 @@ class RenderBase(metaclass=abc.ABCMeta):
         return wrapper
 
     @draw_valid_required
-    def draw_text(self, xy: tuple, text: str, fontsize: int = 0, fill: str = '#000000'):
+    def draw_text(self, xy: tuple, text: str, fontsize: int = 0, fill: str = '#000000', stroke_width = 0):
         _font = self.__get_fonttype(fontsize) if fontsize and fontsize != self._fontsize else self._fonttype
-        self._drawtable.text(xy=xy, text=text, fill=fill, font=_font)
+        self._drawtable.text(xy=xy, text=text, fill=fill, font=_font, stroke_width=stroke_width)
 
     @draw_valid_required
     def draw_divider(self, y: int, percent: float = 0.9, fill: str = 'gray'):
         _padding = self._w * ((1 - percent) / 2)
         self._drawtable.line([(_padding, y), (self._w - _padding, y)], fill=fill)
+    
+    @draw_valid_required
+    def draw_box(self, xy: Tuple[int], fill: str = 'gray'):
+        self._drawtable.rounded_rectangle(xy, fill=fill, radius=8)
 
     def __calc_texts_center_index(self, texts: List[str], fontsizes: List[int], pivot: int) -> List[int]:
         def _(c: str) -> float:
@@ -89,20 +93,22 @@ class RenderBase(metaclass=abc.ABCMeta):
         return heads
 
     @draw_valid_required
-    def draw_text_center(self, y: int, texts: List[str], fontsizes: List[int] = [], fills: List[str] = [], pivot: int = -1):
+    def draw_text_center(self, y: int, texts: List[str], fontsizes: List[int] = [], fills: List[str] = [], pivot: int = -1, strokes_width: List[int] = []):
         texts = list(map(str, texts))
         if len(fontsizes) == 0:
             fontsizes = [self._fontsize] * len(texts)
         if len(fills) == 0:
             fills = ['#000000'] * len(texts)
+        if len(strokes_width) == 0:
+            strokes_width = [0] * len(texts)
         maxsize = max(fontsizes)
         ydiffs = list(map(lambda x: maxsize - x, fontsizes))
         heads = self.__calc_texts_center_index(texts, fontsizes, pivot)
         for idx, text in enumerate(texts):
-            self.draw_text((heads[idx], y + ydiffs[idx]), text, fontsizes[idx], fills[idx])
+            self.draw_text((heads[idx], y + ydiffs[idx]), text, fontsizes[idx], fills[idx], strokes_width[idx])
     
     @draw_valid_required
-    def draw_text_grid(self, y: int, texts: List[str], fontsizes: List[int] = [], fills: List[str] = [], grids: List[int] = [], padding: int = 0):
+    def draw_text_grid(self, y: int, texts: List[str], fontsizes: List[int] = [], fills: List[str] = [], grids: List[int] = [], padding: int = 0, strokes_width: List[int] = []):
         texts = list(map(str, texts))
         if len(fontsizes) == 0:
             fontsizes = [self._fontsize] * len(texts)
@@ -110,6 +116,8 @@ class RenderBase(metaclass=abc.ABCMeta):
             fills = ['#000000'] * len(texts)
         if len(grids) == 0:
             grids = [1] * len(texts)
+        if len(strokes_width) == 0:
+            strokes_width = [0] * len(texts)
         maxsize = max(fontsizes)
         ydiffs = list(map(lambda x: maxsize - x, fontsizes))
         total_grid = sum(grids)
@@ -117,7 +125,7 @@ class RenderBase(metaclass=abc.ABCMeta):
         for idx in range(len(grids)):
             heads.append(padding if idx == 0 else heads[-1] + (self._w - padding) * (grids[idx - 1] / total_grid))
         for idx, text in enumerate(texts):
-            self.draw_text((heads[idx], y + ydiffs[idx]), text, fontsizes[idx], fills[idx])
+            self.draw_text((heads[idx], y + ydiffs[idx]), text, fontsizes[idx], fills[idx], strokes_width[idx])
 
     @abc.abstractmethod
     async def generate_image(self, content: dict):
