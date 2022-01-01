@@ -61,17 +61,16 @@ class RenderBase(metaclass=abc.ABCMeta):
     @draw_valid_required
     def draw_text(self, xy: tuple, text: str, fontsize: int = 0, fill: str = '#000000'):
         _font = self.__get_fonttype(fontsize) if fontsize and fontsize != self._fontsize else self._fonttype
-        self._drawtable.text(
-            xy=xy, text=text, fill=fill, font=_font)
+        self._drawtable.text(xy=xy, text=text, fill=fill, font=_font)
 
     @draw_valid_required
-    def draw_divider(self, y: int, percent: float = 0.8, fill: str = 'gray'):
+    def draw_divider(self, y: int, percent: float = 0.9, fill: str = 'gray'):
         _padding = self._w * ((1 - percent) / 2)
         self._drawtable.line([(_padding, y), (self._w - _padding, y)], fill=fill)
 
     def __calc_texts_center_index(self, texts: List[str], fontsizes: List[int], pivot: int) -> List[int]:
         def _(c: str) -> float:
-            return 1 if '\u4e00' <= c and c <= '\u9fa5' else 0.5
+            return 1 if '\u4e00' <= c and c <= '\u9fa5' else 0.55
         real_sizes = []
         for idx, text in enumerate(texts):
             real_sizes.append(sum(list(map(lambda x: _(x) * fontsizes[idx], text))))
@@ -89,6 +88,7 @@ class RenderBase(metaclass=abc.ABCMeta):
                 heads[back_idx] = heads[back_idx - 1] + real_sizes[back_idx - 1]
         return heads
 
+    @draw_valid_required
     def draw_text_center(self, y: int, texts: List[str], fontsizes: List[int] = [], fills: List[str] = [], pivot: int = -1):
         texts = list(map(str, texts))
         if len(fontsizes) == 0:
@@ -98,6 +98,24 @@ class RenderBase(metaclass=abc.ABCMeta):
         maxsize = max(fontsizes)
         ydiffs = list(map(lambda x: maxsize - x, fontsizes))
         heads = self.__calc_texts_center_index(texts, fontsizes, pivot)
+        for idx, text in enumerate(texts):
+            self.draw_text((heads[idx], y + ydiffs[idx]), text, fontsizes[idx], fills[idx])
+    
+    @draw_valid_required
+    def draw_text_grid(self, y: int, texts: List[str], fontsizes: List[int] = [], fills: List[str] = [], grids: List[int] = [], padding: int = 0):
+        texts = list(map(str, texts))
+        if len(fontsizes) == 0:
+            fontsizes = [self._fontsize] * len(texts)
+        if len(fills) == 0:
+            fills = ['#000000'] * len(texts)
+        if len(grids) == 0:
+            grids = [1] * len(texts)
+        maxsize = max(fontsizes)
+        ydiffs = list(map(lambda x: maxsize - x, fontsizes))
+        total_grid = sum(grids)
+        heads = []
+        for idx in range(len(grids)):
+            heads.append(padding if idx == 0 else heads[-1] + (self._w - padding) * (grids[idx - 1] / total_grid))
         for idx, text in enumerate(texts):
             self.draw_text((heads[idx], y + ydiffs[idx]), text, fontsizes[idx], fills[idx])
 
