@@ -69,8 +69,8 @@ class RenderBase(metaclass=abc.ABCMeta):
         self._drawtable.line([(_padding, y), (self._w - _padding, y)], fill=fill)
     
     @draw_valid_required
-    def draw_box(self, xy: Tuple[int], fill: str = 'gray'):
-        self._drawtable.rounded_rectangle(xy, fill=fill, radius=8)
+    def draw_box(self, xy: Tuple[int], fill: str = 'gray', radius: int = 8):
+        self._drawtable.rounded_rectangle(xy, fill=fill, radius=radius)
 
     def __calc_texts_center_index(self, texts: List[str], fontsizes: List[int], pivot: int) -> List[int]:
         def _(c: str) -> float:

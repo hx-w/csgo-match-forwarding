@@ -12,7 +12,18 @@ class StatsRender(RenderBase):
     def __init__(self, fontsize: int = 32) -> None:
         self._COLORS = {
             'TEAMS': ['#0F659E', '#9E691C'],
-            'CT/T': ['#E0A42D', '#2C6EA4']
+            'CT/T': ['#E0A42D', '#2C6EA4'],
+            'MAPS': {
+                'Vertigo': '#1C9580',
+                'Inferno': '#15488E',
+                'Overpass': '#BD6225',
+                'Mirage': '#773BC9',
+                'Nuke': '#952021',
+                'Dust2': '#D7C64C',
+                'Ancient': '#134632',
+                'Train': '#368911',
+                'Cache': '#3999CD'
+            }
         }
         self._logo_images = []
         super().__init__(fontsize=fontsize)
@@ -27,8 +38,13 @@ class StatsRender(RenderBase):
             await self.paste_image(self._logo_images[1], (self._w - 60, 3))
 
     async def __render_map_info(self, map_info: dict, idx: int = 0):
-        _line = ['{:<10}'.format(map_info['name']), '{}'.format('上半场'), '{}'.format('下半场'), '总计']
-        self.draw_text_grid(idx * 80 + 115, _line, grids=[1.5, 1, 1, 1], padding = 40)
+        # draw badge
+        _map_color = 'gray'
+        if map_info['name'] in self._COLORS['MAPS'].keys():
+            _map_color = self._COLORS['MAPS'][map_info['name']]
+        self.draw_box((38, idx * 80 + 115, 125, idx * 80 + 138), _map_color, radius=10)
+        _line = [' ' + '{:<10}'.format(map_info['name']), '{}'.format('上半场'), '{}'.format('下半场'), '总计']
+        self.draw_text_grid(idx * 80 + 115, _line, grids=[1.5, 1, 1, 1], fills=['white', 'black', 'black', 'black'], padding = 40)
         
         async def __render_team_info(y: int, team_info: dict, winner: str):
             _line = [
@@ -53,8 +69,8 @@ class StatsRender(RenderBase):
         
         _winner = await __map_winner(map_info['teams'])
         
-        await __render_team_info(idx * 80 + 135, map_info['teams'][0], _winner)
-        await __render_team_info(idx * 80 + 155, map_info['teams'][1], _winner)
+        await __render_team_info(idx * 80 + 137, map_info['teams'][0], _winner)
+        await __render_team_info(idx * 80 + 157, map_info['teams'][1], _winner)
 
     async def __render_players(self, yindex: int, players: list, teamname: str, teamidx: int):
         # draw box
