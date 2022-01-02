@@ -46,9 +46,9 @@ class StatsRender(RenderBase):
         _line = [' ' + '{:<10}'.format(map_info['name']), '{}'.format('上半场'), '{}'.format('下半场'), '总计']
         self.draw_text_grid(idx * 80 + 115, _line, grids=[1.5, 1, 1, 1], fills=['white', 'black', 'black', 'black'], padding = 40)
         
-        async def __render_team_info(y: int, team_info: dict, winner: str):
+        async def __render_team_info(y: int, team_info: dict, winner: str, picker: str):
             _line = [
-                '{:<10}'.format(team_info['name']),
+                '{:<10}'.format(team_info['name'] + ['', '(选)'][team_info['name'] == picker]),
                 '{}({})'.format(team_info['result']['first']['rounds'], team_info['result']['first']['side'].upper()),
                 '{}({})'.format(team_info['result']['second']['rounds'], team_info['result']['second']['side'].upper()),
                 '{}'.format(team_info['result']['first']['rounds'] + team_info['result']['second']['rounds'] + team_info['result']['ext'])
@@ -59,7 +59,7 @@ class StatsRender(RenderBase):
                 'black',
                 self._COLORS['CT/T'][team_info['result']['first']['side'] == 'ct'],
                 self._COLORS['CT/T'][team_info['result']['second']['side'] == 'ct'],
-                'green' if team_info['name'] == winner else 'red'
+                'darkgreen' if team_info['name'] == winner else 'red'
             ]
             self.draw_text_grid(y, _line, grids=[1.5, 1, 1, 1], padding=40, fills=_fontcolors)
         
@@ -69,8 +69,8 @@ class StatsRender(RenderBase):
         
         _winner = await __map_winner(map_info['teams'])
         
-        await __render_team_info(idx * 80 + 137, map_info['teams'][0], _winner)
-        await __render_team_info(idx * 80 + 157, map_info['teams'][1], _winner)
+        await __render_team_info(idx * 80 + 137, map_info['teams'][0], _winner, map_info['pick'])
+        await __render_team_info(idx * 80 + 157, map_info['teams'][1], _winner, map_info['pick'])
 
     async def __render_players(self, yindex: int, players: list, teamname: str, teamidx: int):
         # draw box
@@ -98,14 +98,15 @@ class StatsRender(RenderBase):
             _fontcolors = [
                 'black',
                 '#4C596B',
-                ['green', 'red'][int(_line[2]) < 0],
+                ['darkgreen', 'red'][int(_line[2]) < 0],
                 '#4C596B',
-                ['green', 'red'][float(_line[4]) < 1.0]
+                ['darkgreen', 'red'][float(_line[4]) < 1.0]
             ]
             self.draw_text_grid(yindex + (idx + 1) * 30, _line, padding=40, fills=_fontcolors, grids=[1.5, 1, 1, 1, 1])
-        # # paste logo
-        # if self._logo_images[teamidx]:
-        #     await self.paste_image(self._logo_images[teamidx], (40, yindex))
+    
+    async def __render_player_card(self, yindex: int, playerId: int):
+        
+        pass
 
     async def generate_image(self, content: dict):
         res, stats = content['result'], content['stats']
@@ -123,7 +124,7 @@ class StatsRender(RenderBase):
         )
         # L03
         _line = [res['teams'][0]['result'], f'  {res["maps"]}  ', res['teams'][1]['result']]
-        _fills = ['green', 'black', 'red'] if res['teams'][0]['result'] > res['teams'][1]['result'] else ['red', 'black', 'green']
+        _fills = ['green', 'black', 'red'] if res['teams'][0]['result'] > res['teams'][1]['result'] else ['red', 'black', 'darkgreen']
         self.draw_text_center(73, _line, fills=_fills, fontsizes=[25, 18, 25], strokes_width=[1, 0, 1], pivot=1)
         # L04 divider
         self.draw_divider(108)
@@ -140,5 +141,12 @@ class StatsRender(RenderBase):
         yindex = len(stats['maps']) * 80 + 120
         await self.__render_players(yindex, stats['teams'][0]['players'], stats['teams'][0]['name'], 0)
         await self.__render_players(yindex + 30 + len(stats['teams'][0]['players']) * 30, stats['teams'][1]['players'], stats['teams'][1]['name'], 1)
-
+        # L08 divider
+        yindex = yindex + 60 + (len(stats['teams'][0]['players']) + len(stats['teams'][1]['players'])) * 30
+        self.draw_divider(yindex)
+        # L09 highest rating player
+        hightest_rating_player = [stats['teams'][0]['players'][0]['id'], stats['teams'][1]['players'][0]['id']][
+            stats['teams'][0]['players'][0]['rating'] < stats['teams'][1]['players'][0]['rating']
+        ]
+        await self.__render_player_card(yindex + 30, hightest_rating_player)
         del self._logo_images
