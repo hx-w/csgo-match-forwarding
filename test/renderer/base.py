@@ -72,7 +72,7 @@ class RenderBase(metaclass=abc.ABCMeta):
     def draw_box(self, xy: Tuple[int], fill: str = 'gray', radius: int = 8):
         self._drawtable.rounded_rectangle(xy, fill=fill, radius=radius)
 
-    def __calc_texts_center_index(self, texts: List[str], fontsizes: List[int], pivot: int) -> List[int]:
+    def __calc_texts_center_index(self, texts: List[str], fontsizes: List[int], pivot: int, padding: int) -> List[int]:
         def _(c: str) -> float:
             return 1 if '\u4e00' <= c and c <= '\u9fa5' else 0.55
         real_sizes = []
@@ -81,11 +81,11 @@ class RenderBase(metaclass=abc.ABCMeta):
         totalsize = sum(real_sizes)
         heads = [0] * len(texts)
         if pivot == -1:
-            heads = [(self._w - totalsize) / 2]
+            heads = [padding + (self._w - totalsize - padding) / 2]
             for rsize in real_sizes[:-1]:
                 heads.append(heads[-1] + rsize)
         else: # valid pivot
-            heads[pivot] = (self._w - real_sizes[pivot]) / 2
+            heads[pivot] = padding + (self._w - real_sizes[pivot] - padding) / 2
             for front_idx in range(1, pivot + 1):
                 heads[pivot - front_idx] = heads[pivot - front_idx + 1] - real_sizes[pivot - front_idx]
             for back_idx in range(pivot + 1, len(texts)):
@@ -93,7 +93,7 @@ class RenderBase(metaclass=abc.ABCMeta):
         return heads
 
     @draw_valid_required
-    def draw_text_center(self, y: int, texts: List[str], fontsizes: List[int] = [], fills: List[str] = [], pivot: int = -1, strokes_width: List[int] = []):
+    def draw_text_center(self, y: int, texts: List[str], fontsizes: List[int] = [], fills: List[str] = [], pivot: int = -1, strokes_width: List[int] = [], padding: int = 0):
         texts = list(map(str, texts))
         if len(fontsizes) == 0:
             fontsizes = [self._fontsize] * len(texts)
@@ -103,7 +103,7 @@ class RenderBase(metaclass=abc.ABCMeta):
             strokes_width = [0] * len(texts)
         maxsize = max(fontsizes)
         ydiffs = list(map(lambda x: maxsize - x, fontsizes))
-        heads = self.__calc_texts_center_index(texts, fontsizes, pivot)
+        heads = self.__calc_texts_center_index(texts, fontsizes, pivot, padding)
         for idx, text in enumerate(texts):
             self.draw_text((heads[idx], y + ydiffs[idx]), text, fontsizes[idx], fills[idx], strokes_width[idx])
     

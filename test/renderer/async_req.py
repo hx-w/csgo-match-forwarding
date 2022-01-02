@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import requests
 import aiohttp
 import asyncio
 
@@ -27,6 +28,11 @@ class AsyncRequest:
         done, _ = await self.__fetch_task(urls, bin)
         return [fut.result() for fut in done]
 
+    def request_sync(self, url: str) -> bytes:
+        resp = requests.get(url)
+        if resp.status_code != 200:
+            resp = requests.get(url)
+        return resp.content
 
 req_inst = AsyncRequest()
 
