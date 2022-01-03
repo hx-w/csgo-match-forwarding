@@ -27,7 +27,7 @@ def fetch_data_cache():
 render_inst = StatsRender(16)
 
 loop = asyncio.get_event_loop()
-b64bytes = loop.run_until_complete(render_inst.draw(500, 1050, fetch_data_cache()))
+b64bytes = loop.run_until_complete(render_inst.draw(500, 880, fetch_data_new()))
 loop.close()
 
 img = base64.b64decode(b64bytes)

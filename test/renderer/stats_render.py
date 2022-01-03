@@ -119,7 +119,7 @@ class StatsRender(RenderBase):
         self.draw_box((150, yindex + 38, self._w - 40, yindex + 138), fill='#F3F5F7')
         self.draw_text_center(yindex + 38, texts=[player_info['nickname']], fontsizes=[18], fills=['black'], padding=100)
         _line = ['地图数', '爆头率', 'Impact', 'Rating']
-        self.draw_text_grid(yindex + 67, texts=_line, grids=[1, 1, 1, 1], padding=160, fontsizes=[12, 12, 12, 12])
+        self.draw_text_grid(yindex + 67, texts=_line, grids=[1, 1, 1, 1], padding=160, fontsizes=[12, 12, 12, 12], fills=['#565C61'] * 4)
         _line = [
             player_info['mapsPlayed'],
             f'{player_info["headshots"]}%',
@@ -128,7 +128,7 @@ class StatsRender(RenderBase):
         ]
         self.draw_text_grid(yindex + 80, texts=_line, grids=[1, 1, 1, 1], padding=160, fontsizes=[12, 12, 12, 12])
         _line = ['回合击杀', '回合死亡', '回合伤害', 'KAST']
-        self.draw_text_grid(yindex + 104, texts=_line, grids=[1, 1, 1, 1], padding=160, fontsizes=[12, 12, 12, 12])
+        self.draw_text_grid(yindex + 104, texts=_line, grids=[1, 1, 1, 1], padding=160, fontsizes=[12, 12, 12, 12], fills=['#565C61'] * 4)
         _line = [
             '{:^4}'.format(player_info['kpr']),
             '{:^4}'.format(player_info['dpr']),
