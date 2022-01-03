@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import nonebot
+from nonebot.default_config import SUPERUSERS
 from nonebot.permission import GROUP_ADMIN, SUPERUSER
 from nonebot import on_command, on_startup, CommandSession
 
@@ -32,6 +33,9 @@ async def handler_teamlist(session: CommandSession):
 async def handlder_matchlist(session: CommandSession):
     pass
 
+@on_command('forward_test', aliases=('战报测试'), permission=SUPERUSER)
+async def handler_test(session: CommandSession):
+    await forwarding.command_test(session)
 
 @nonebot.scheduler.scheduled_job('interval', seconds=bot.config.MATCH_RESULT_CHECK_PERIOD)
 async def handler_forwarding():

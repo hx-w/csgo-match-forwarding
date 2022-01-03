@@ -57,6 +57,9 @@ class RenderBase(metaclass=abc.ABCMeta):
                 return
             return func(self, *args, **kw)
         return wrapper
+    
+    def crop(self, y: int):
+        self._image = self._image.crop((0, 0, 500, y))
 
     @draw_valid_required
     def draw_text(self, xy: tuple, text: str, fontsize: int = 0, fill: str = '#000000', stroke_width = 0):

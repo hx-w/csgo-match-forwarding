@@ -19,6 +19,8 @@ class MatchForward(ForwardBase, AsyncObject):
 
     async def generate_message(self) -> List[nonebot.Message]:
         _validlist = await self.request_data(bot.config.API('/results'))
+        # for _valid in _validlist:
+            # await self.request_data(bot.config.API(f'/stats/?matchId={_valid["matchId"]}'))
         return list(map(lambda x: f'{x}', _validlist))
 
 
@@ -28,4 +30,4 @@ class NewsForward(ForwardBase):
 
     async def generate_message(self) -> List[nonebot.Message]:
         _validlist = await self.request_data(bot.config.API('/news'))
-        return list(map(lambda x: f'{x}', _validlist))
+        return list(map(lambda x: f'【新闻速递】\n{x["title"]}\n\n{x["description"]}', _validlist))

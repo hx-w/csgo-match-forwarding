@@ -180,4 +180,5 @@ class StatsRender(RenderBase):
             stats['teams'][0]['players'][0]['rating'] < stats['teams'][1]['players'][0]['rating']
         ]
         await self.__render_player_card(yindex, hightest_rating_player)
+        self.crop(yindex + 160)
         del self._logo_images

@@ -24,4 +24,5 @@ services:
     volumes:
       - ./configs:/var/lib/match-nonebot/
       - ./nonebot:/root/nonebot/
+      - ./static:/var/lib/static/
     command: python3 /root/nonebot/bot.py
