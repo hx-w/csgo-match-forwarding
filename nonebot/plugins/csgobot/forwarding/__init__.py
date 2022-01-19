@@ -49,7 +49,7 @@ async def command_test(session: nonebot.CommandSession):
 
 async def handler_forwarding():
     await insts_dict['match_inst'].broadcast()
-    await insts_dict['news_inst'].broadcast()
+    # await insts_dict['news_inst'].broadcast()
 
 
 __all__ = [

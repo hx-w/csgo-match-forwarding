@@ -30,7 +30,7 @@ class StatsRender(RenderBase):
     
     async def __blend_teamlogo(self, urls: list):
         logos = await req_inst.request(urls, True)
-        self._logo_images = [await self.get_image_from_binary(logos[0]), await self.get_image_from_binary(logos[1])]
+        self._logo_images = [await self.get_image_from_binary(logos[1]), await self.get_image_from_binary(logos[0])]
         self._logo_images = list(map(lambda x: x.resize((50, 50), Image.ANTIALIAS) if x else None, self._logo_images))
         if self._logo_images[0]:
             await self.paste_image(self._logo_images[0], (10, 3))
