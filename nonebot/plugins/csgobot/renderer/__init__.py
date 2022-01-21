@@ -2,4 +2,6 @@
 
 from .stats_render import StatsRender
 
-__all__ = [StatsRender]
+__all__ = [
+    'StatsRender'
+]

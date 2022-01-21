@@ -5,4 +5,4 @@ import nonebot
 
 config = nonebot.get().config
 
-__all__ = [config]
+__all__ = ['config']

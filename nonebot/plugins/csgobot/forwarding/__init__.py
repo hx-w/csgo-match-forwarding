@@ -27,7 +27,6 @@ async def command_subscribe(session: nonebot.CommandSession):
 async def command_subscribed(session: nonebot.CommandSession):
     teamlist = await insts_dict['match_inst'].subscribe_inst.get_subscribed_list()
     ret = "全部战队订阅(小写)：\n" + "\n".join(teamlist)
-
     await session.send(ret)
 
 
@@ -53,10 +52,10 @@ async def handler_forwarding():
 
 
 __all__ = [
-    on_start_up,
-    command_subscribe,
-    command_unsubscribe,
-    command_subscribed,
-    command_test,
-    handler_forwarding,
+    'on_start_up',
+    'command_subscribe',
+    'command_unsubscribe',
+    'command_subscribed',
+    'command_test',
+    'handler_forwarding',
 ]
