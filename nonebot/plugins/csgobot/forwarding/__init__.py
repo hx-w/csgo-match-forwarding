@@ -7,6 +7,8 @@ from ..renderer import StatsRender
 
 from ..async_req import req_inst
 
+
+bot = nonebot.get_bot()
 render_inst = StatsRender(16)
 
 async def on_start_up():
@@ -41,7 +43,7 @@ async def command_unsubscribe(session: nonebot.CommandSession):
 
 async def command_test(session: nonebot.CommandSession):
     _jsons = (await req_inst.request(
-        ['https://hltv-api.netlify.app/.netlify/functions/results']
+        [bot.config.API('/results')]
     ))[0]
     _json = {}
     for _ in _jsons:
@@ -52,12 +54,14 @@ async def command_test(session: nonebot.CommandSession):
     if len(_json) == 0:
         await session.send('没有符合条件的比赛')
         return
-    _stats = (await req_inst.request([f'https://hltv-api.netlify.app/.netlify/functions/stats/?matchId={_json["matchId"]}']))[0]
+    _stats = (await req_inst.request(
+        [bot.config.API(f'/stats/?matchId={_json["matchId"]}')]))[0]
     _b64bytes = await render_inst.draw(500, 1300, {'result': _json, 'stats': _stats})
     await session.send(nonebot.MessageSegment.image(f'base64://{_b64bytes.decode("utf-8")}'))
 
 
 async def handler_forwarding():
+    print('[schedule forwarding]')
     await insts_dict['match_inst'].broadcast()
     await insts_dict['news_inst'].broadcast()
 
