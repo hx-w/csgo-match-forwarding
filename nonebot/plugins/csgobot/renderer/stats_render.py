@@ -29,7 +29,8 @@ class StatsRender(RenderBase):
         super().__init__(fontsize=fontsize)
     
     async def __blend_teamlogo(self, urls: list):
-        logos = await req_inst.request(urls, True)
+        logos = [req_inst.request_sync(urls[0]), req_inst.request_sync(urls[1])]
+        # logos = await req_inst.request(urls, True)
         self._logo_images = [await self.get_image_from_binary(logos[0]), await self.get_image_from_binary(logos[1])]
         self._logo_images = list(map(lambda x: x.resize((50, 50), Image.ANTIALIAS) if x else None, self._logo_images))
         if self._logo_images[0]:
@@ -132,7 +133,7 @@ class StatsRender(RenderBase):
         _line = [
             '{:^4}'.format(player_info['kpr']),
             '{:^4}'.format(player_info['dpr']),
-            '{:^4}'.format(player_info['apr']),
+            '{:^4}'.format(player_info['adr']),
             f'{player_info["kast"]}%'
         ]
         self.draw_text_grid(yindex + 117, texts=_line, grids=[1, 1, 1, 1], padding=160, fontsizes=[12, 12, 12, 12])

@@ -5,7 +5,9 @@ import nonebot
 from .base import ForwardBase
 from .base import AsyncObject
 from .subscribe_inst import SubscribeSystem
+from ..renderer import StatsRender
 
+render_inst = StatsRender(16)
 bot = nonebot.get_bot()
 
 
@@ -18,10 +20,13 @@ class MatchForward(ForwardBase, AsyncObject):
         return True in [self.subscribe_inst.check_team_status(team['name']) for team in inst['teams']]
 
     async def generate_message(self) -> List[nonebot.Message]:
+        message_list = []
         _validlist = await self.request_data(bot.config.API('/results'))
-        # for _valid in _validlist:
-            # await self.request_data(bot.config.API(f'/stats/?matchId={_valid["matchId"]}'))
-        return list(map(lambda x: f'{x}', _validlist))
+        for _valid in _validlist:
+            _stats = await self.request_data(bot.config.API(f'/stats/?matchId={_valid["matchId"]}'))
+            _b64bytes = await render_inst.draw(500, 1300, {'result': _valid, 'stats': _stats})
+            message_list.append(nonebot.MessageSegment.image(f'base64://{_b64bytes.decode("utf-8")}'))
+        return message_list
 
 
 class NewsForward(ForwardBase):

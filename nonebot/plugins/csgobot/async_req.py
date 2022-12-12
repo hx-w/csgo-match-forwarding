@@ -25,6 +25,7 @@ class AsyncRequest:
             return await asyncio.wait(tasks)
 
     async def request(self, urls=[], bin: bool = False) -> list:
+        print('requesting urls: ', urls)
         done, _ = await self.__fetch_task(urls, bin)
         return [fut.result() for fut in done]
 

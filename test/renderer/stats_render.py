@@ -132,7 +132,7 @@ class StatsRender(RenderBase):
         _line = [
             '{:^4}'.format(player_info['kpr']),
             '{:^4}'.format(player_info['dpr']),
-            '{:^4}'.format(player_info['apr']),
+            '{:^4}'.format(player_info['adr']),
             f'{player_info["kast"]}%'
         ]
         self.draw_text_grid(yindex + 117, texts=_line, grids=[1, 1, 1, 1], padding=160, fontsizes=[12, 12, 12, 12])

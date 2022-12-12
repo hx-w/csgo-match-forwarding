@@ -40,16 +40,26 @@ async def command_unsubscribe(session: nonebot.CommandSession):
         await session.send(f'未订阅【{team}】的比赛，取消订阅失败')
 
 async def command_test(session: nonebot.CommandSession):
-    _json = (await req_inst.request(['https://hltv-api.netlify.app/.netlify/functions/results']))[0][0]
+    _jsons = (await req_inst.request(
+        ['https://hltv-api.netlify.app/.netlify/functions/results']
+    ))[0]
+    _json = {}
+    for _ in _jsons:
+        if insts_dict['match_inst'].subscribe_inst.check_team_status(_['teams'][0]['name']) \
+            or insts_dict['match_inst'].subscribe_inst.check_team_status(_['teams'][1]['name']):
+            _json = _
+            break
+    if len(_json) == 0:
+        await session.send('没有符合条件的比赛')
+        return
     _stats = (await req_inst.request([f'https://hltv-api.netlify.app/.netlify/functions/stats/?matchId={_json["matchId"]}']))[0]
     _b64bytes = await render_inst.draw(500, 1300, {'result': _json, 'stats': _stats})
     await session.send(nonebot.MessageSegment.image(f'base64://{_b64bytes.decode("utf-8")}'))
 
 
 async def handler_forwarding():
-    # await insts_dict['match_inst'].broadcast()
-    # await insts_dict['news_inst'].broadcast()
-    pass
+    await insts_dict['match_inst'].broadcast()
+    await insts_dict['news_inst'].broadcast()
 
 
 __all__ = [
