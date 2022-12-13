@@ -105,18 +105,12 @@ class StatsRender(RenderBase):
             ]
             self.draw_text_grid(yindex + (idx + 1) * 30, _line, padding=40, fills=_fontcolors, grids=[1.5, 1, 1, 1, 1])
     
-    async def fetch_player_json(self, playerId: int) -> dict:
-        ENDPOINT = 'https://hltv-api.netlify.app/.netlify/functions'
-        player_info = (await req_inst.request([f'{ENDPOINT}/player/?playerId={playerId}']))[0]
-        return player_info
-
-    async def __render_player_card(self, yindex: int, playerId: int):
+    async def __render_player_card(self, yindex: int, player_info: dict):
         self.draw_text_center(yindex, texts=['- MVP -'], fontsizes=[25], fills=['green'], strokes_width=[0])
-        player_info = await self.fetch_player_json(playerId)
-        _player_img_bin = req_inst.request_sync(player_info['image'])
-        _player_img = (await self.get_image_from_binary(_player_img_bin)).resize((100, 100), Image.ANTIALIAS)
-        await self.paste_image(_player_img, (40, yindex + 38))
-
+        if 'image' in player_info:
+            _player_img_bin = req_inst.request_sync(player_info['image'])
+            _player_img = (await self.get_image_from_binary(_player_img_bin)).resize((100, 100), Image.ANTIALIAS)
+            await self.paste_image(_player_img, (40, yindex + 38))
         self.draw_box((150, yindex + 38, self._w - 40, yindex + 138), fill='#F3F5F7')
         self.draw_text_center(yindex + 38, texts=[player_info['nickname']], fontsizes=[18], fills=['black'], padding=100)
         _line = ['地图数', '爆头率', 'Impact', 'Rating']
@@ -137,8 +131,6 @@ class StatsRender(RenderBase):
             f'{player_info["kast"]}%'
         ]
         self.draw_text_grid(yindex + 117, texts=_line, grids=[1, 1, 1, 1], padding=160, fontsizes=[12, 12, 12, 12])
-
-
 
     async def generate_image(self, content: dict):
         res, stats = content['result'], content['stats']
@@ -177,10 +169,7 @@ class StatsRender(RenderBase):
         yindex = yindex + 60 + (len(stats['teams'][0]['players']) + len(stats['teams'][1]['players'])) * 30
         self.draw_divider(yindex)
         # L09 highest rating player
-        hightest_rating_player = [stats['teams'][0]['players'][0]['id'], stats['teams'][1]['players'][0]['id']][
-            stats['teams'][0]['players'][0]['rating'] < stats['teams'][1]['players'][0]['rating']
-        ]
-        await self.__render_player_card(yindex, hightest_rating_player)
+        await self.__render_player_card(yindex, content['mvp'])
 
         # post process
         await self.crop(yindex + 160)

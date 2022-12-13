@@ -42,9 +42,16 @@ async def command_unsubscribe(session: nonebot.CommandSession):
         await session.send(f'未订阅【{team}】的比赛，取消订阅失败')
 
 async def command_test(session: nonebot.CommandSession):
-    _jsons = (await req_inst.request(
-        [bot.config.API('/results')]
-    ))[0]
+    async def get_mvp_playerinfo(stats: dict) -> dict:
+        try:
+            _0, _1 = stats['teams'][0]['players'][0], stats['teams'][1]['players'][0]
+            mvp_id = [_0['id'], _1['id']][_0['rating'] < _1['rating']]
+            mvp_info = (await req_inst.request([bot.config.API(f'/player/?playerId={mvp_id}')]))[0]
+            return mvp_info
+        except:
+            return {}
+
+    _jsons = (await req_inst.request([bot.config.API('/results')]))[0]
     _json = {}
     for _ in _jsons:
         if insts_dict['match_inst'].subscribe_inst.check_team_status(_['teams'][0]['name']) \
@@ -56,12 +63,12 @@ async def command_test(session: nonebot.CommandSession):
         return
     _stats = (await req_inst.request(
         [bot.config.API(f'/stats/?matchId={_json["matchId"]}')]))[0]
-    _b64bytes = await render_inst.draw(500, 1300, {'result': _json, 'stats': _stats})
+    _mvp_info = await get_mvp_playerinfo(_stats)
+    _b64bytes = await render_inst.draw(500, 1300, {'result': _json, 'stats': _stats, 'mvp': _mvp_info})
     await session.send(nonebot.MessageSegment.image(f'base64://{_b64bytes.decode("utf-8")}'))
 
 
 async def handler_forwarding():
-    print('[schedule forwarding]')
     await insts_dict['match_inst'].broadcast()
     await insts_dict['news_inst'].broadcast()
 
