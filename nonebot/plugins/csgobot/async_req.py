@@ -25,11 +25,12 @@ class AsyncRequest:
             return await asyncio.wait(tasks)
 
     async def request(self, urls=[], bin: bool = False) -> list:
-        print('requesting urls: ', urls)
+        print('Async => ', urls)
         done, _ = await self.__fetch_task(urls, bin)
         return [fut.result() for fut in done]
 
     def request_sync(self, url: str) -> bytes:
+        print('Sync => ', url)
         resp = requests.get(url)
         if resp.status_code != 200:
             resp = requests.get(url)
